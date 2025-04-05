@@ -1,23 +1,18 @@
-from math import ceil
-
 class Solution:
     def smallestDivisor(self, nums: List[int], threshold: int) -> int:
-        def cal_div(arr, n):
-            d1 = 0
-            for i in arr:
-                d1 += ceil(i / n)
-            return d1
-        
-        low = 1
-        high = max(nums)
-        
-        while low <= high:
-            mid = (low + high) // 2
-            divi = cal_div(nums, mid)
-            
-            if divi > threshold:
-                low = mid + 1
+        def helper(div,nums):
+            total=0
+            for i in nums:
+                total+=ceil(i/div)#ceil
+            return total<=threshold
+        low=min(nums)
+        high=max(nums)
+        while(low<=high):
+            mid=low+(high-low)//2
+            if helper(mid,nums):
+                high=mid-1
             else:
-                high = mid - 1
+                low=mid+1
+        return low 
+            
         
-        return low
