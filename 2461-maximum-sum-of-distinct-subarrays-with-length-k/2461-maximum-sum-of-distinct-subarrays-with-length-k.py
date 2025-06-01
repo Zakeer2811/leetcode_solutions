@@ -1,25 +1,24 @@
-from collections import deque
-from typing import List
-
 class Solution:
     def maximumSubarraySum(self, nums: List[int], k: int) -> int:
-        window = deque()
-        window_set = set()
-        current_sum = 0
-        max_sum = 0
+        l = 0
+        s = set()
+        total = 0
+        ans = 0  # return 0 if no valid subarray
 
-        for num in nums:
-            # Remove from left if duplicate or window is too large
-            while num in window_set or len(window) >= k:
-                removed = window.popleft()
-                window_set.remove(removed)
-                current_sum -= removed
+        for r in range(len(nums)):
+            while nums[r] in s:
+                s.remove(nums[l])
+                total -= nums[l]
+                l += 1
 
-            window.append(num)
-            window_set.add(num)
-            current_sum += num
+            s.add(nums[r])
+            total += nums[r]
 
-            if len(window) == k:
-                max_sum = max(max_sum, current_sum)
+            if r - l + 1 == k:
+                ans = max(ans, total)
+                # shrink window from left
+                s.remove(nums[l])
+                total -= nums[l]
+                l += 1
 
-        return max_sum
+        return ans
