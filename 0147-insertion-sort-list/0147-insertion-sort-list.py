@@ -3,16 +3,30 @@
 #     def __init__(self, val=0, next=None):
 #         self.val = val
 #         self.next = next
+
 class Solution:
     def insertionSortList(self, head: Optional[ListNode]) -> Optional[ListNode]:
-        l=[]
-        temp=head
-        while temp:
-            l.append(temp.val)
-            temp=temp.next
-        l.sort()
-        temp=head
-        for i in range(len(l)):
-            temp.val=l[i]
-            temp=temp.next
-        return head
+        if not head or not head.next:
+            return head
+        
+        dummy = ListNode(0)
+        dummy.next = head
+        prev = head
+        curr = head.next
+
+        while curr:
+            if prev.val <= curr.val:
+                prev = curr
+                curr = curr.next
+                continue
+
+            thead = dummy
+            while thead.next and thead.next.val < curr.val:
+                thead = thead.next
+
+            prev.next = curr.next
+            curr.next = thead.next
+            thead.next = curr
+            curr = prev.next
+
+        return dummy.next
