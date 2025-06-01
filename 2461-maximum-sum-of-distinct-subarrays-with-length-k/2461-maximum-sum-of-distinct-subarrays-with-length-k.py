@@ -1,24 +1,27 @@
+from collections import defaultdict
+from typing import List
+
 class Solution:
     def maximumSubarraySum(self, nums: List[int], k: int) -> int:
-        l = 0
-        s = set()
-        total = 0
-        ans = 0  # return 0 if no valid subarray
+        freq = defaultdict(int)
+        current_sum = 0
+        max_sum = 0
+        left = 0
 
-        for r in range(len(nums)):
-            while nums[r] in s:
-                s.remove(nums[l])
-                total -= nums[l]
-                l += 1
+        for right in range(len(nums)):
+            freq[nums[right]] += 1
+            current_sum += nums[right]
 
-            s.add(nums[r])
-            total += nums[r]
+            # Shrink window if it exceeds size k
+            if right - left + 1 > k:
+                freq[nums[left]] -= 1
+                current_sum -= nums[left]
+                if freq[nums[left]] == 0:
+                    del freq[nums[left]]
+                left += 1
 
-            if r - l + 1 == k:
-                ans = max(ans, total)
-                # shrink window from left
-                s.remove(nums[l])
-                total -= nums[l]
-                l += 1
+            # Check for valid window
+            if right - left + 1 == k and len(freq) == k:
+                max_sum = max(max_sum, current_sum)
 
-        return ans
+        return max_sum
