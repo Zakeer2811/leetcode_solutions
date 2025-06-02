@@ -1,17 +1,13 @@
 class Solution:
     def subsets(self, nums: List[int]) -> List[List[int]]:
-        subsets = []
-        n = len(nums)
-        
-        # There are 2^n possible subsets
-        total_subsets = 1 << n  # 2^n
-        
-        for i in range(total_subsets):
-            subset = []
+        n=len(nums)
+        subsets_count=1<<n
+        ans=[]
+        for i in range(subsets_count):
+            temp=[]
             for j in range(n):
-                # Check if the jth bit in the integer i is set. If set, include nums[j]
-                if i & (1 << j):
-                    subset.append(nums[j])
-            subsets.append(subset)
+                if i&(1<<j):
+                    temp.append(nums[j])
+            ans.append(temp)
+        return ans
         
-        return subsets
