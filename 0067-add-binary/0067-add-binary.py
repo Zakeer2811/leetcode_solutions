@@ -10,6 +10,8 @@ class Solution:
             if n == 0:
                 return ''
             return d2b(n // 2) + str(n % 2)
+        if a=='0' and b=='0':
+            return '0'
         return d2b(b2d(a,0)+b2d(b,0))
 
         
