@@ -2,26 +2,22 @@ from typing import List
 
 class Solution:
     def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
-        res = []
-
-        def helper(curr: List[int], rem: List[int], target: int):
-            # Base case: if target is exactly zero, we found a valid combination
-            if target == 0:
-                res.append(curr[:])
-                return
-            if target < 0 or not rem:
-                return
-            
-            first = rem[0]
-            rest = rem  # Since candidates can be reused unlimited times, don't move forward when taking
-            
-            # Take the first element (if it fits)
-            if first <= target:
-                helper(curr + [first], rest, target - first)
-            
-            # Not take the first element, move to next
-            helper(curr, rem[1:], target)
+        ans = []
         
-        # No need to sort here since duplicates allowed unlimited times
-        helper([], candidates, target)
-        return res
+        def recursion(ind, ds, target):
+            if ind == len(candidates):
+                if target == 0:
+                    ans.append(ds[:])  # Use ds[:] to append a copy of ds
+                return
+            
+            if candidates[ind] <= target:
+                # Pick condition
+                ds.append(candidates[ind])
+                recursion(ind, ds, target - candidates[ind])
+                ds.pop()
+            
+            # Not pick condition
+            recursion(ind + 1, ds, target)
+        
+        recursion(0, [], target)
+        return ans
