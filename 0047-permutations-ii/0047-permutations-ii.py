@@ -5,27 +5,29 @@ class Solution:
         def backtrack(index: int):
             # Base case: when we've processed all elements
             if index == len(nums):
-                return [nums[:]]  # Return the current permutation as a list of lists
+                result.append(nums[:])  # Store the current permutation
+                return
 
-            all_permutations = []  # Store all permutations generated in this call
+            seen = set()  # Set to track numbers used at this level
             for i in range(index, len(nums)):
-                # Skip duplicates: if nums[i] is the same as nums[i-1], skip this iteration
-                if i > index and nums[i] == nums[i - 1]:
+                # Skip duplicates: if nums[i] is the same as nums[i-1] and i > index, skip
+                if nums[i] in seen:
                     continue
+                seen.add(nums[i])
                 # Swap to place nums[i] at the current position `index`
                 nums[i], nums[index] = nums[index], nums[i]
                 # Recurse for the rest of the elements
-                all_permutations += backtrack(index + 1)  # Collect all permutations from recursion
+                backtrack(index + 1)
                 # Backtrack: Swap back to the original state
                 nums[i], nums[index] = nums[index], nums[i]
 
-            return all_permutations  # Return the list of permutations
-
-        # Sort nums first to make sure duplicates are adjacentSorting and Unique Permutations:
-# When you sort the array [1, 2, 2], it becomes [1, 2, 2]. This sorted order ensures that identical numbers (2 in this case) are adjacent to each other.Thus, permutations like [1, 2, 2], [2, 1, 2], and [2, 2, 1] will not be repeated, and only unique permutations are generated.
+        # Sort nums first to make sure duplicates are adjacent
         nums.sort()
-        # Start recursion from the first index
-        return backtrack(0)
+        result = []  # To store all the valid permutations
+        backtrack(0)  # Start backtracking from the first index
+        return result
+
+
 '''
                               permuteUnique([1, 2, 2])
                               /           |         \
