@@ -27,6 +27,7 @@ class Solution:
             mid = (left + right) // 2
             if canFormPairs(mid):
                 right = mid      # Try to find a smaller maxDiff on the left side
+                # Because mid could still be the answer so we don't exclude it from search space
             else:
                 left = mid + 1   # Increase maxDiff since mid was too small
         
