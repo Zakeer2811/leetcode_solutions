@@ -133,7 +133,7 @@ Summary:
 - When mid is invalid, discard the left side: left = mid + 1.
 - This ensures you never skip valid answers and find the smallest max difference correctly.
 """
-    """
+"""
     Dry run example:
     nums = [10,1,2,7,1,3], p = 2
 
