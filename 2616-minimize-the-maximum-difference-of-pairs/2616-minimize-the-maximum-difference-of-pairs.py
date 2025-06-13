@@ -33,7 +33,106 @@ class Solution:
         
         # When left == right, we have the minimum max difference possible
         return left
+"""
+Key binary search logic:
+- left = smallest possible difference (0).
+- right = largest possible difference (max(nums) - min(nums)).
+- For a mid value, check if forming pairs is possible.
+- If yes, try smaller differences.
+- If no, try larger differences.
 
+Your original (buggy) update step in binary search:
+if canFormPairs(mid):
+    right = mid - 1
+else:
+    left = mid + 1
+
+Why is this wrong?
+If canFormPairs(mid) is True, it means mid is a valid answer (you can form pairs with max difference ≤ mid).
+But by doing right = mid - 1, you exclude mid from the next search space.
+This can cause skipping the correct minimum max difference.
+
+Correct update step:
+if canFormPairs(mid):
+    right = mid     # keep mid in the search space because mid might be the answer
+else:
+    left = mid + 1
+
+Dry Run Example with nums = [10,1,2,7,1,3], p = 2
+
+Step 1: Sort the array
+nums = [1, 1, 2, 3, 7, 10]
+
+Step 2: Define search boundaries
+left = 0                      # min possible difference
+right = 10 - 1 = 9            # max possible difference
+
+Step 3: First iteration
+mid = (0 + 9) // 2 = 4
+
+Check canFormPairs(4):
+  - Pair (1,1) difference = 0 <= 4 -> count = 1, i = 2
+  - Pair (2,3) difference = 1 <= 4 -> count = 2, i = 4
+Count = 2 >= p (2) -> True
+
+=> can form pairs with maxDiff = 4
+=> right = mid = 4   # Correct update (not 3)
+
+Step 4: Second iteration
+left = 0, right = 4
+mid = (0 + 4) // 2 = 2
+
+Check canFormPairs(2):
+  - Pair (1,1) difference = 0 <= 2 -> count = 1, i = 2
+  - Pair (2,3) difference = 1 <= 2 -> count = 2, i = 4
+Count = 2 >= p -> True
+
+=> right = mid = 2
+
+Step 5: Third iteration
+left = 0, right = 2
+mid = (0 + 2) // 2 = 1
+
+Check canFormPairs(1):
+  - Pair (1,1) difference = 0 <= 1 -> count = 1, i = 2
+  - Pair (2,3) difference = 1 <= 1 -> count = 2, i = 4
+Count = 2 >= p -> True
+
+=> right = mid = 1
+
+Step 6: Fourth iteration
+left = 0, right = 1
+mid = (0 + 1) // 2 = 0
+
+Check canFormPairs(0):
+  - Pair (1,1) difference = 0 <= 0 -> count = 1, i = 2
+  - (2,3) difference = 1 > 0 -> no pair, i = 3
+  - (3,7) difference = 4 > 0 -> no pair, i = 4
+  - (7,10) difference = 3 > 0 -> no pair, i = 5
+Count = 1 < p (2) -> False
+
+=> left = mid + 1 = 1
+
+Step 7: End condition
+left = 1, right = 1
+Loop ends since left == right
+
+Return left = 1 as the minimum maximum difference.
+
+What happens if you use right = mid - 1?
+When mid = 1 and canFormPairs(1) returns True,
+You set right = 0,
+Next iteration tries mid = 0,
+canFormPairs(0) returns False,
+So left moves to 1,
+But the binary search overshoots the range and might miss 1 as a valid answer,
+Leading to incorrect answers like 0.
+
+Summary:
+- When mid is valid, keep it in your search space: right = mid.
+- When mid is invalid, discard the left side: left = mid + 1.
+- This ensures you never skip valid answers and find the smallest max difference correctly.
+"""
     """
     Dry run example:
     nums = [10,1,2,7,1,3], p = 2
